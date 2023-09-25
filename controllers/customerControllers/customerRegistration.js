@@ -1,7 +1,6 @@
-const CustomerRegistration = require('../../models/customerRegistration');
-const customerRegistrationSchema = require('../../validators/customerRegistrationValidator');
+const CustomerRegistration = require('../../models/customer/customerRegistration');
+const customerRegistrationSchema = require('../../validators/customer/registrationValidator');
 const CustomErrorHandler = require('../../services/CustomErrorHandler');
-const customerRegistration = require('../../models/customerRegistration');
 
 const CustomerRegistrationController = {
     async store(req, res, next) {
@@ -69,7 +68,7 @@ const CustomerRegistrationController = {
     async deleteCustomer(req, res, next) {
         try {
             const customerId = req.params.id;
-            const removedCustomer = await customerRegistration.findByIdAndDelete(customerId);
+            const removedCustomer = await CustomerRegistration.findByIdAndDelete(customerId);
             if (removedCustomer) {
                 return res.status(200).json(removedCustomer);
             }
