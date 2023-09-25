@@ -12,5 +12,8 @@ router.get('/api/customer/registration/email/:email',customerRegistrationControl
 
 //custumer routes for project selection
 router.post('/api/customer/:customerId/project/add/:templateId',projectSelection.addProject);
+router.get('/api/customer/:customerId/project/:id/phases',projectSelection.getProjectPhases);
+router.get('/api/customer/:customerId/project/:id/modules',projectSelection.getProjectModules);
+router.get('/api/customer/:customerId/project/:id/tasks',projectSelection.getProjectTasks);
 
 module.exports = router
