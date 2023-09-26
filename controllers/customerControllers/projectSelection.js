@@ -41,15 +41,7 @@ const projectSelectionController = {
             if (!project) {
                 return next(CustomErrorHandler.notFound('Project not found'));
             }
-            const processedPhases = {};
-            const result = [];
-            project.phases.forEach(phase => {
-                const key = phase.phasesId._id;
-                if (key in processedPhases === false) {
-                    processedPhases[key] = key;
-                    result.push(phase.phasesId);
-                }
-            });
+            const result = project.phases;
             return res.status(200).json(result);
         } catch (error) {
             return next(error);
