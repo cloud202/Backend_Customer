@@ -117,6 +117,19 @@ const projectSelectionController = {
             return next(error);
         }
     },
+
+    async getCustomerProjects(req, res, next) {
+        try {
+            const customerId = req.params.customerId;
+            const allProjects = await Project.find({ customer_id: customerId});
+            if(allProjects.length===0) {
+                return next(CustomErrorHandler.notFound('No projects available for the customer'));
+            }
+            return res.status(200).json(allProjects);
+        } catch (error) {
+            return next(error);
+        }
+    },
 };
 
 module.exports = projectSelectionController;

@@ -15,5 +15,6 @@ router.post('/api/customer/:customerId/project/add/:templateId',projectSelection
 router.get('/api/customer/:customerId/project/:id/phases',projectSelection.getProjectPhases);
 router.get('/api/customer/:customerId/project/:id/modules',projectSelection.getProjectModules);
 router.get('/api/customer/:customerId/project/:id/tasks',projectSelection.getProjectTasks);
+router.get('/api/customer/:customerId/project/allprojects',projectSelection.getCustomerProjects);
 
 module.exports = router
