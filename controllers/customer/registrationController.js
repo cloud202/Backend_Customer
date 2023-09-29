@@ -2,7 +2,7 @@ const CustomerRegistration = require('../../models/customer/customerRegistration
 const customerRegistrationSchema = require('../../validators/customer/registrationValidator');
 const CustomErrorHandler = require('../../services/CustomErrorHandler');
 
-const CustomerRegistrationController = {
+const registrationController = {
     async store(req, res, next) {
         try {
             const { error } = customerRegistrationSchema.validate(req.body);
@@ -40,9 +40,11 @@ const CustomerRegistrationController = {
     async getCustomerByEmail(req, res, next) {
         try {
             const customerEmail = req.params.email;
-            const customer = await CustomerRegistration.findOne({ customer_email: customerEmail });
+            let customer = await CustomerRegistration.findOne({ customer_email: customerEmail });
             if (!customer) {
-                return next(CustomErrorHandler.notFound('Customer not found'));
+                const lastSavedCustomer = await CustomerRegistration.findOne().sort({ createdAt: -1 });
+                let newCustomerId = lastSavedCustomer ? parseInt(lastSavedCustomer.customer_id.slice(3)) + 1 : 1;
+                customer = await CustomerRegistration.create({ customer_email: customerEmail, customer_id: 'QC_' + newCustomerId });
             }
             return res.status(200).json(customer);
         } catch (error) {
@@ -79,4 +81,4 @@ const CustomerRegistrationController = {
     }
 }
 
-module.exports = CustomerRegistrationController;
+module.exports = registrationController;
