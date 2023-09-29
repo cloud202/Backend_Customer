@@ -1,20 +1,22 @@
 const router = require('express').Router();
-const customerRegistrationController = require('../controllers/customerControllers/customerRegistration.js');
-const projectSelection = require('../controllers/customerControllers/projectSelection.js')
+const registrationController = require('../controllers/customer/registrationController.js');
+const projectController = require('../controllers/project/projectController.js')
 
 //customer routes for registration
-router.post('/api/customer/registration',customerRegistrationController.store);
-router.get('/api/customer/registration',customerRegistrationController.getAllCustomers);
-router.get('/api/customer/registration/:id',customerRegistrationController.getCustomerById);
-router.patch('/api/customer/registration/:id',customerRegistrationController.updateCustomer);
-router.delete('/api/customer/registration/:id',customerRegistrationController.deleteCustomer);
-router.get('/api/customer/registration/email/:email',customerRegistrationController.getCustomerByEmail);
+router.post('/api/customer/registration',registrationController.store);
+router.get('/api/customer/registration',registrationController.getAllCustomers);
+router.get('/api/customer/registration/:id',registrationController.getCustomerById);
+router.patch('/api/customer/registration/:id',registrationController.updateCustomer);
+router.delete('/api/customer/registration/:id',registrationController.deleteCustomer);
+router.get('/api/customer/registration/email/:email',registrationController.getCustomerByEmail);
 
 //custumer routes for project selection
-router.post('/api/customer/:customerId/project/add/:templateId',projectSelection.addProject);
-router.get('/api/customer/:customerId/project/:id/phases',projectSelection.getProjectPhases);
-router.get('/api/customer/:customerId/project/:id/modules',projectSelection.getProjectModules);
-router.get('/api/customer/:customerId/project/:id/tasks',projectSelection.getProjectTasks);
-router.get('/api/customer/:customerId/project/allprojects',projectSelection.getCustomerProjects);
+router.post('/api/customer/:customerId/project/add/:templateId',projectController.addProject);
+router.get('/api/customer/:customerId/project/:id/phases',projectController.getProjectPhases);
+router.get('/api/customer/:customerId/project/:id/modules',projectController.getProjectModules);
+router.get('/api/customer/:customerId/project/:id/tasks',projectController.getProjectTasks);
+router.get('/api/customer/:customerId/project/allprojects',projectController.getCustomerProjects);
+router.patch('/api/customer/project/phase',projectController.updatePhaseById);
+router.patch('/api/customer/project/module',projectController.updateModuleById);
 
 module.exports = router
