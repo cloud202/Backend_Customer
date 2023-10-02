@@ -168,7 +168,7 @@ const typeSchema = new Schema({
 const templateSchema = new Schema({
     project_id: {
         type: String,
-        required: true, 
+        required: true,
     },
     customer_id: {
         type: String,
@@ -178,6 +178,13 @@ const templateSchema = new Schema({
         type: String,
         required: true,
     },
+    project_industry: industrySchema,
+    project_CAP: {
+        type: String,
+        required: true,
+    },
+    project_TS: [String],
+    project_WT: [String],
     template_name: {
         type: String,
         required: true,
