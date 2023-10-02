@@ -14,14 +14,20 @@ const projectController = {
             if (error) {
                 return next(error);
             }
-            const apiUrl = 'api/admin/master/v2/project_template';
+            const apiUrl1 = 'api/admin/master/v2/project_template';
+            const apiUrl2 = 'api/admin/master/project_industry';
             const templateId = req.params.templateId;
-            const response = await axios.get(`${ADMIN_API_BASE_URL}/${apiUrl}/${templateId}`);
+            const projectIndustryId = req.body.project_industry_id;
+            const [response1, response2] = await Promise.all([
+                axios.get(`${ADMIN_API_BASE_URL}/${apiUrl1}/${templateId}`),
+                axios.get(`${ADMIN_API_BASE_URL}/${apiUrl2}/${projectIndustryId}`)
+            ]);
+            const fetchedTemplate = response1.data;
+            const project_industry = response2.data;
             const customerId = req.params.customerId;
-            const fetchedTemplate = response.data;
-            const { project_name } = req.body;
-            const savedProject = await Project.create({ customer_id: customerId, project_name, ...fetchedTemplate });
-            return res.status(200).json(savedProject);
+            const { project_name, project_CAP, project_TS, project_WT } = req.body;
+            const savedProject = await Project.create({ customer_id: customerId, project_industry, project_name, project_CAP, project_TS, project_WT, ...fetchedTemplate });
+            return res.status(201).json(savedProject);
         } catch (error) {
             return next(error);
         }
