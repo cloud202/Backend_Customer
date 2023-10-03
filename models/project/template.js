@@ -139,7 +139,7 @@ const taskSchema = new Schema({
     },
     task_status: {
         type: Boolean,
-        required: true
+        required: false
     },
 });
 
