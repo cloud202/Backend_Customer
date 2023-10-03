@@ -107,7 +107,7 @@ const taskSchema = new Schema({
     },
     task_id: {
         type: String,
-        unique: true
+        unique: false
     },
     task_type: {
         type: String,
