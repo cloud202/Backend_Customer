@@ -140,6 +140,19 @@ const projectController = {
         }
     },
 
+    async getCustomerProjectById(req, res, next) {
+        try {
+            const projectOid = req.params.id;
+            const project = await Project.findById({ _id: projectOid });
+            if (!project) {
+                return next(CustomErrorHandler.notFound('No project available for the customer'));
+            }
+            return res.status(200).json(project);
+        } catch (error) {
+            return next(error);
+        }
+    },
+
     async updatePhaseById(req, res, next) {
         try {
             const updateFields = req.body.updateFields;
