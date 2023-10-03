@@ -236,44 +236,63 @@ const projectController = {
         }
     },
 
-    // async updateTaskById(req, res, next) {
-    //     try {
-    //         const updateFields = req.body.updateFields;
-    //         const { error } = phaseSchema.validate(req.body.updateFields);
-    //         if (error) {
-    //             return next(error);
-    //         }
-    //         const customerId = req.body.customerId;
-    //         const projectOid = req.body.projectOid;
-    //         const phaseOid = req.body.phaseOid;
-    //         const moduleOid = req.body.moduleOid;
-    //         const taskOid = req.body.taskOid;
-    //         const updatedTask = await Project.findOneAndUpdate(
-    //             {
-    //                 $and: [
-    //                     {
-    //                         customer_id: customerId,
-    //                     },
-    //                     {
-    //                         _id: projectOid
-    //                     }
-    //                 ]
-    //             },
-    //             {
-    //                 "$set": {
-    //                     "phases.$[phase].modules.$[module].moduleId.name": updateFields.name,
-    //                     "phases.$[phase].modules.$[module].moduleId.description": updateFields.description,
-    //                     "phases.$[phase].modules.$[module].moduleId.scope": updateFields.scope,
-    //                 }
-    //             },
-    //             {
-
-    //             }
-    //         );
-    //     } catch (error) {
-    //         return next(error);
-    //     }
-    // },
+    async updateTaskById(req, res, next) {
+        try {
+            const { error } = taskSchema.validate(req.body);
+            if (error) {
+                return next(error);
+            }
+            const updateFields = req.body.updateFields;
+            const customerId = req.body.customerId;
+            const projectOid = req.body.projectOid;
+            const phaseOid = req.body.phaseOid;
+            const moduleOid = req.body.moduleOid;
+            const taskOid = req.body.taskOid;
+            const updatedTask = await Project.findOneAndUpdate(
+                {
+                    $and: [
+                        {
+                            customer_id: customerId,
+                        },
+                        {
+                            _id: projectOid
+                        }
+                    ]
+                },
+                {
+                    "$set": {
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.name": updateFields.name,
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.start_date": updateFields.startDate,
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.due_on": updateFields.dueOn,
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.effort_estimate": updateFields.effortEstimate,
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.task_status": updateFields.taskStatus,
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.task_description": updateFields.taskDescription,
+                        "phases.$[phase].modules.$[module].tasks.$[task].taskId.assign_to": updateFields.assignTo,
+                    }
+                },
+                {
+                    arrayFilters: [
+                        {
+                            "phase._id": phaseOid
+                        },
+                        {
+                            "module._id": moduleOid
+                        },
+                        {
+                            "task._id": taskOid
+                        }
+                    ],
+                    new: true,
+                }
+            );
+            if (!updatedTask) {
+                return next(CustomErrorHandler.notFound('Task not found'));
+            }
+            return res.status(200).json(updatedTask);
+        } catch (error) {
+            return next(error);
+        }
+    },
 };
 
 module.exports = projectController;

@@ -117,9 +117,6 @@ const taskSchema = new Schema({
     task_actionName: {
         type: String,
     },
-    task_script: {
-        type: String,
-    },
     start_date: {
         type: Date,
         required: false,
@@ -136,14 +133,14 @@ const taskSchema = new Schema({
         type: String,
         required: false,
     },
-    task_link: {
-        type: String,
-        required: false,
-    },
     assign_to: {
         type: String,
         required: false,
-    }
+    },
+    task_status: {
+        type: Boolean,
+        required: true
+    },
 });
 
 const typeSchema = new Schema({

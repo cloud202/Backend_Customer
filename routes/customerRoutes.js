@@ -18,5 +18,6 @@ router.get('/api/customer/:customerId/project/:id/tasks',projectController.getPr
 router.get('/api/customer/:customerId/project/allprojects',projectController.getCustomerProjects);
 router.patch('/api/customer/project/phase',projectController.updatePhaseById);
 router.patch('/api/customer/project/module',projectController.updateModuleById);
+router.patch('/api/customer/project/task',projectController.updateTaskById);
 
 module.exports = router

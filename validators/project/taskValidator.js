@@ -1,11 +1,24 @@
 const Joi = require('joi');
+const JoiObjectId = require('joi-objectid');
+Joi.objectId = JoiObjectId(Joi);
+
+const updateFieldsSchema = {
+    name: Joi.string(),
+    startDate: Joi.date(),
+    dueOn: Joi.date(),
+    effortEstimate: Joi.number(),
+    taskStatus: Joi.boolean(),
+    taskDescription: Joi.string(),
+    assignTo: Joi.string(),
+};
 
 const taskSchema = Joi.object({
-    name: Joi.string(),
-    task_description: Joi.string(),
-    scope: Joi.string(),
-    task_link: Joi.string(),
-    assign_to: Joi.string(),
+    customerId: Joi.string().required(),
+    projectOid: Joi.objectId().required(),
+    phaseOid: Joi.objectId().required(),
+    moduleOid: Joi.objectId().required(),
+    taskOid: Joi.objectId().required(),
+    updateFields : Joi.object(updateFieldsSchema).required(),
 }, { unknown: false });
 
 module.exports = taskSchema;
