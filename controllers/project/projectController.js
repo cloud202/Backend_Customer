@@ -307,22 +307,22 @@ const projectController = {
         }
     },
 
-    async updateProjectById(req, res, next) {
-        try {
-            const { error } = updateProjectSchema.validate(req.body);
-            if (error) {
-                return next(error);
-            }
-            const projectOid = req.params.id;
-            const updatedProject = await Project.findOneAndUpdate({ _id: projectOid }, { ...req.body }, { new: true });
-            if (!updatedProject) {
-                return next(CustomErrorHandler.notFound('Project not found'));
-            }
-            return res.status(200).json(updatedProject);
-        } catch (error) {
-            return next(error);
-        }
-    },
+    // async updateProjectById(req, res, next) {
+    //     try {
+    //         const { error } = updateProjectSchema.validate(req.body);
+    //         if (error) {
+    //             return next(error);
+    //         }
+    //         const projectOid = req.params.id;
+    //         const updatedProject = await Project.findOneAndUpdate({ _id: projectOid }, { ...req.body }, { new: true });
+    //         if (!updatedProject) {
+    //             return next(CustomErrorHandler.notFound('Project not found'));
+    //         }
+    //         return res.status(200).json(updatedProject);
+    //     } catch (error) {
+    //         return next(error);
+    //     }
+    // },
 };
 
 module.exports = projectController;
