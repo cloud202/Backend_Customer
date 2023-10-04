@@ -1,7 +1,7 @@
 const axios = require('axios');
 const Project = require('../../models/project/template');
 const { ADMIN_API_BASE_URL } = require('../../config');
-const projectSchema = require('../../validators/project/projectValidator');
+const { projectSchema, updateProjectSchema } = require('../../validators/project/projectValidator');
 const CustomErrorHandler = require('../../services/CustomErrorHandler');
 const phaseSchema = require('../../validators/project/phaseValidator');
 const moduleSchema = require('../../validators/project/moduleValidator');
@@ -302,6 +302,23 @@ const projectController = {
                 return next(CustomErrorHandler.notFound('Task not found'));
             }
             return res.status(200).json(updatedTask);
+        } catch (error) {
+            return next(error);
+        }
+    },
+
+    async updateProjectById(req, res, next) {
+        try {
+            const { error } = updateProjectSchema.validate(req.body);
+            if (error) {
+                return next(error);
+            }
+            const projectOid = req.params.id;
+            const updatedProject = await Project.findOneAndUpdate({ _id: projectOid }, { ...req.body }, { new: true });
+            if (!updatedProject) {
+                return next(CustomErrorHandler.notFound('Project not found'));
+            }
+            return res.status(200).json(updatedProject);
         } catch (error) {
             return next(error);
         }
