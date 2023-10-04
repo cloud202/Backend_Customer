@@ -200,7 +200,19 @@ const templateSchema = new Schema({
                 { taskId: taskSchema }
             ]
         }]
-    }]
+    }],
+    start_date: {
+        type: Date,
+        required: false
+    },
+    end_date: {
+        type: Date,
+        required: false
+    },
+    details: {
+        type: String,
+        required: false
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Project', templateSchema, 'customer_projects');

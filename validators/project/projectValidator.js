@@ -10,4 +10,11 @@ const projectSchema = Joi.object({
     project_WT: Joi.array().items(Joi.string()),
 }, { unknown: false });
 
-module.exports = projectSchema;
+const updateProjectSchema = Joi.object({
+    project_name: Joi.string(),
+    start_date: Joi.date(),
+    end_date: Joi.date(),
+    details: Joi.string()
+}, { unknown: false });
+
+module.exports = { projectSchema, updateProjectSchema };
