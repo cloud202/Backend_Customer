@@ -138,7 +138,7 @@ const taskSchema = new Schema({
         required: false,
     },
     task_status: {
-        type: Boolean,
+        type: String,
         required: false
     },
 });

@@ -7,7 +7,7 @@ const updateFieldsSchema = {
     startDate: Joi.date(),
     dueOn: Joi.date(),
     effortEstimate: Joi.number(),
-    taskStatus: Joi.boolean(),
+    taskStatus: Joi.string(),
     taskDescription: Joi.string(),
     assignTo: Joi.string(),
 };
