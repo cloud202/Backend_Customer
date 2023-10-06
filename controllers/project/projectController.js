@@ -143,7 +143,27 @@ const projectController = {
     async getCustomerProjectById(req, res, next) {
         try {
             const projectOid = req.params.id;
-            const project = await Project.findById({ _id: projectOid });
+            const project = await Project.findOneAndUpdate(
+                {
+                    _id: projectOid
+                },
+                {
+                    $set: {
+                        "phases.$[].modules.$[].tasks.$[task].taskId.task_status": "Due"
+                    }
+                },
+                {
+                    "arrayFilters": [
+                        {
+                            $and: [
+                                { "task.taskId.task_status": { $in: ["In-Progress", "Onboarded"] } },
+                                { "task.taskId.due_on": { $lte: new Date() } }
+                            ]
+                        }
+                    ],
+                    new: true
+                }
+            )
             if (!project) {
                 return next(CustomErrorHandler.notFound('No project available for the customer'));
             }
