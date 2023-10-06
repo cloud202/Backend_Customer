@@ -156,7 +156,7 @@ const projectController = {
                     "arrayFilters": [
                         {
                             $and: [
-                                { "task.taskId.task_status": { $in: ["In-Progress", "Onboarded"] } },
+                                { "task.taskId.task_status": { $in: ["In-progress", "Onboarded"] } },
                                 { "task.taskId.due_on": { $lte: new Date() } }
                             ]
                         }
