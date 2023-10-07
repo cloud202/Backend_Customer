@@ -17,6 +17,7 @@ router.get('/api/customer/:customerId/project/:id/modules',projectController.get
 router.get('/api/customer/:customerId/project/:id/tasks',projectController.getProjectTasks);
 router.get('/api/customer/:customerId/project/allprojects',projectController.getCustomerProjects);
 router.get('/api/customer/project/:id',projectController.getCustomerProjectById);
+router.get('/api/customer/project/:id/links',projectController.getProjectLinks);
 router.patch('/api/customer/project/update/:id',projectController.updateProjectById);
 router.patch('/api/customer/project/phase',projectController.updatePhaseById);
 router.patch('/api/customer/project/module',projectController.updateModuleById);

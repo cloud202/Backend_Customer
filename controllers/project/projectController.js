@@ -343,6 +343,19 @@ const projectController = {
             return next(error);
         }
     },
+
+    async getProjectLinks(req, res, next) {
+        try {
+            const projectOid = req.params.id;
+            const project = await Project.findById(projectOid).select('links');
+            if (!project) {
+                return next(CustomErrorHandler.notFound('Project not found'));
+            }
+            return res.status(200).json(project.links);
+        } catch (error) {
+            return next(error);
+        }
+    },
 };
 
 module.exports = projectController;
