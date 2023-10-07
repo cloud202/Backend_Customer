@@ -141,6 +141,10 @@ const taskSchema = new Schema({
         type: String,
         required: false
     },
+    playbook: {
+        type: [String],
+        required: false,
+    }
 });
 
 const typeSchema = new Schema({
@@ -201,6 +205,12 @@ const templateSchema = new Schema({
             ]
         }]
     }],
+    links: {
+        sales: [String],
+        funding: [String],
+        delivery: [String],
+        operations: [String],
+    },
     start_date: {
         type: Date,
         required: false
@@ -213,6 +223,7 @@ const templateSchema = new Schema({
         type: String,
         required: false
     },
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Project', templateSchema, 'customer_projects');
