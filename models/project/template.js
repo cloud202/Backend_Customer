@@ -53,6 +53,14 @@ const moduleSchema = new Schema({
     status: {
         type: Boolean,
         required: true
+    },
+    start_date: {
+        type: Date,
+        required: false
+    },
+    due_on: {
+        type: Date,
+        required: false
     }
 });
 
@@ -72,6 +80,14 @@ const phaseSchema = new Schema({
     status: {
         type: Boolean,
         required: true
+    },
+    start_date: {
+        type: Date,
+        required: false
+    },
+    due_on: {
+        type: Date,
+        required: false
     }
 });
 
