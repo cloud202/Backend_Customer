@@ -176,7 +176,7 @@ const projectController = {
     async updatePhaseById(req, res, next) {
         try {
             const updateFields = req.body.updateFields;
-            const { error } = phaseSchema.validate(req.body.updateFields);
+            const { error } = phaseSchema.validate(req.body);
             if (error) {
                 return next(error);
             }
@@ -199,6 +199,8 @@ const projectController = {
                         "phases.$[phase].phasesId.name": updateFields.name,
                         "phases.$[phase].phasesId.description": updateFields.description,
                         "phases.$[phase].phasesId.scope": updateFields.scope,
+                        "phases.$[phase].phasesId.start_date": updateFields.startDate,
+                        "phases.$[phase].phasesId.due_on": updateFields.dueOn,
                     }
                 },
                 {
@@ -222,7 +224,7 @@ const projectController = {
     async updateModuleById(req, res, next) {
         try {
             const updateFields = req.body.updateFields;
-            const { error } = moduleSchema.validate(req.body.updateFields);
+            const { error } = moduleSchema.validate(req.body);
             if (error) {
                 return next(error);
             }
@@ -246,6 +248,8 @@ const projectController = {
                         "phases.$[phase].modules.$[module].moduleId.name": updateFields.name,
                         "phases.$[phase].modules.$[module].moduleId.description": updateFields.description,
                         "phases.$[phase].modules.$[module].moduleId.scope": updateFields.scope,
+                        "phases.$[phase].modules.$[module].moduleId.start_date": updateFields.startDate,
+                        "phases.$[phase].modules.$[module].moduleId.due_on": updateFields.dueOn,
                     }
                 },
                 {
