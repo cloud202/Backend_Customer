@@ -183,6 +183,7 @@ const projectController = {
             const customerId = req.body.customerId;
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
+            const ids = { phaseOid };
             const updatedPhase = await Project.findOneAndUpdate(
                 {
                     $and: [
@@ -201,6 +202,9 @@ const projectController = {
                         "phases.$[phase].phasesId.scope": updateFields.scope,
                         "phases.$[phase].phasesId.start_date": updateFields.startDate,
                         "phases.$[phase].phasesId.due_on": updateFields.dueOn,
+                    },
+                    "$inc": {
+                        "version": 1
                     }
                 },
                 {
@@ -209,7 +213,8 @@ const projectController = {
                             "phase._id": phaseOid
                         }
                     ],
-                    new: true
+                    new: true,
+                    ids
                 }
             );
             if (!updatedPhase) {
@@ -232,6 +237,7 @@ const projectController = {
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
+            const ids = { phaseOid, moduleOid };
             const updatedModule = await Project.findOneAndUpdate(
                 {
                     $and: [
@@ -250,6 +256,9 @@ const projectController = {
                         "phases.$[phase].modules.$[module].moduleId.scope": updateFields.scope,
                         "phases.$[phase].modules.$[module].moduleId.start_date": updateFields.startDate,
                         "phases.$[phase].modules.$[module].moduleId.due_on": updateFields.dueOn,
+                    },
+                    "$inc": {
+                        "version": 1
                     }
                 },
                 {
@@ -261,7 +270,8 @@ const projectController = {
                             "module._id": moduleOid
                         }
                     ],
-                    new: true
+                    new: true,
+                    ids
                 },
             );
             if (!updatedModule) {
@@ -285,6 +295,7 @@ const projectController = {
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
             const taskOid = req.body.taskOid;
+            const ids = { phaseOid, moduleOid, taskOid };
             const updatedTask = await Project.findOneAndUpdate(
                 {
                     $and: [
@@ -305,6 +316,9 @@ const projectController = {
                         "phases.$[phase].modules.$[module].tasks.$[task].taskId.task_status": updateFields.taskStatus,
                         "phases.$[phase].modules.$[module].tasks.$[task].taskId.task_description": updateFields.taskDescription,
                         "phases.$[phase].modules.$[module].tasks.$[task].taskId.assign_to": updateFields.assignTo,
+                    },
+                    "$inc": {
+                        "version": 1
                     }
                 },
                 {
@@ -320,6 +334,7 @@ const projectController = {
                         }
                     ],
                     new: true,
+                    ids,
                 }
             );
             if (!updatedTask) {
