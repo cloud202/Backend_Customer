@@ -1,5 +1,7 @@
 const axios = require('axios');
 const Project = require('../../models/project/template');
+const CustomerRegistration = require('../../models/customer/customerRegistration');
+const History = require('../../models/project/history');
 const { ADMIN_API_BASE_URL } = require('../../config');
 const { projectSchema, updateProjectSchema } = require('../../validators/project/projectValidator');
 const CustomErrorHandler = require('../../services/CustomErrorHandler');
@@ -130,7 +132,16 @@ const projectController = {
     async getCustomerProjects(req, res, next) {
         try {
             const customerId = req.params.customerId;
-            const allProjects = await Project.find({ customer_id: customerId });
+            const customer = await CustomerRegistration.findById(customerId);
+            if (!customer) {
+                return next(CustomErrorHandler.notFound('Customer not found'));
+            }
+            let allProjects;
+            if (customer.isMember) {
+                allProjects = await Project.find({ _id: { $in: customer.projects } });
+            } else {
+                allProjects = await Project.find({ customer_id: customerId });
+            }
             if (allProjects.length === 0) {
                 return next(CustomErrorHandler.notFound('No projects available for the customer'));
             }
@@ -371,6 +382,19 @@ const projectController = {
                 return next(CustomErrorHandler.notFound('Project not found'));
             }
             return res.status(200).json(project.links);
+        } catch (error) {
+            return next(error);
+        }
+    },
+
+    async getProjectHistory(req, res, next) {
+        try {
+            const projectOid = req.params.id;
+            const projectHistory = await History.find({ project_id: projectOid }).sort({ version: 1 });
+            if (projectHistory.length === 0) {
+                return next(CustomErrorHandler.notFound("Project Not Updated"));
+            }
+            return res.status(200).json(projectHistory);
         } catch (error) {
             return next(error);
         }

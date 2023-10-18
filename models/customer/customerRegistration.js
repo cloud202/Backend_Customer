@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const customerRegistrationSchema = new Schema({
     customer_id: {
         type: String,
-        unique: true,
+        unique: false,
         required: true,
     },
     customer_name: {
@@ -54,7 +54,16 @@ const customerRegistrationSchema = new Schema({
             set: phoneNumber => phoneNumber === '' ? undefined : phoneNumber
 
         }
-    }
+    },
+    isMember: {
+        type: Boolean,
+        default: false
+    },
+    projects: [{
+        type: Schema.Types.ObjectId,
+        ref: "Project"
+    }]
+
 }, { timestamps: true, minimize: true });
 
 module.exports = mongoose.model('CustomerRegistration', customerRegistrationSchema, 'customers');
