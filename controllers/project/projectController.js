@@ -8,6 +8,7 @@ const CustomErrorHandler = require('../../services/CustomErrorHandler');
 const phaseSchema = require('../../validators/project/phaseValidator');
 const moduleSchema = require('../../validators/project/moduleValidator');
 const taskSchema = require('../../validators/project/taskValidator');
+const assignRevokeProjectSchema = require('../../validators/project/assignRevokeProjectValidator');
 
 const projectController = {
     async addProject(req, res, next) {
@@ -395,6 +396,74 @@ const projectController = {
                 return next(CustomErrorHandler.notFound("Project Not Updated"));
             }
             return res.status(200).json(projectHistory);
+        } catch (error) {
+            return next(error);
+        }
+    },
+
+    async assignProject(req, res, next) {
+        try {
+            const { error } = assignRevokeProjectSchema.validate(req.body);
+            if (error) {
+                return next(error);
+            }
+            const { memberId, projectId } = req.body;
+            const member = await CustomerRegistration.findOneAndUpdate(
+                {
+                    $and: [
+                        {
+                            _id: memberId
+                        },
+                        {
+                            isMember: true
+                        }
+                    ]
+                },
+                {
+                    "$addToSet": { "projects": projectId }
+                },
+                {
+                    new: true,
+                }
+            )
+            if (!member) {
+                return next(CustomErrorHandler.notFound("Member not found"));
+            }
+            return res.status(200).json(member.projects);
+        } catch (error) {
+            return next(error);
+        }
+    },
+
+    async revokeProject(req, res, next) {
+        try {
+            const { error } = assignRevokeProjectSchema.validate(req.body);
+            if (error) {
+                return next(error);
+            }
+            const { memberId, projectId } = req.body;
+            const member = await CustomerRegistration.findOneAndUpdate(
+                {
+                    $and: [
+                        {
+                            _id: memberId
+                        },
+                        {
+                            isMember: true
+                        }
+                    ]
+                },
+                {
+                    "$pull": { "projects": projectId }
+                },
+                {
+                    new: true,
+                }
+            )
+            if (!member) {
+                return next(CustomErrorHandler.notFound("Member not found"));
+            }
+            return res.status(200).json({"Remaining Projects":member.projects});
         } catch (error) {
             return next(error);
         }
