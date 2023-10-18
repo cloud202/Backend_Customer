@@ -9,9 +9,14 @@ const registrationController = {
             if (error) {
                 return next(error);
             }
-            const lastSavedCustomer = await CustomerRegistration.findOne().sort({ createdAt: -1 });
-            let newCustomerId = lastSavedCustomer ? parseInt(lastSavedCustomer.customer_id.slice(3)) + 1 : 1;
-            const newCustomer = await CustomerRegistration.create({ ...req.body, customer_id: 'QC_' + newCustomerId });
+            let newCustomer;
+            if (req.body.isMember) {
+                newCustomer = await CustomerRegistration.create({ ...req.body });
+            } else {
+                const lastSavedCustomer = await CustomerRegistration.findOne().sort({ createdAt: -1 });
+                let newCustomerId = lastSavedCustomer ? parseInt(lastSavedCustomer.customer_id.slice(3)) + 1 : 1;
+                newCustomer = await CustomerRegistration.create({ ...req.body, customer_id: 'QC_' + newCustomerId });
+            }
             return res.status(201).json(newCustomer);
         } catch (error) {
             return next(error);
