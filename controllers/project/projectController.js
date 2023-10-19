@@ -39,17 +39,11 @@ const projectController = {
     async getProjectPhases(req, res, next) {
         try {
             const projectOid = req.params.id;
-            const customerId = req.params.customerId;
-            const project = await Project.findOne({
-                $and: [
-                    {
-                        _id: projectOid
-                    },
-                    {
-                        customer_id: customerId
-                    }
-                ]
-            }).select('phases');
+            const project = await Project.findOne(
+                {
+                    _id: projectOid
+                }
+            ).select('phases');
             if (!project) {
                 return next(CustomErrorHandler.notFound('Project not found'));
             }
@@ -63,17 +57,11 @@ const projectController = {
     async getProjectModules(req, res, next) {
         try {
             const projectOid = req.params.id;
-            const customerId = req.params.customerId;
-            const project = await Project.findOne({
-                $and: [
-                    {
-                        _id: projectOid
-                    },
-                    {
-                        customer_id: customerId
-                    }
-                ]
-            }).select('phases.modules.moduleId');
+            const project = await Project.findOne(
+                {
+                    _id: projectOid
+                }
+            ).select('phases.modules.moduleId');
             if (!project) {
                 return next(CustomErrorHandler.notFound('Project not found'));
             }
@@ -97,17 +85,11 @@ const projectController = {
     async getProjectTasks(req, res, next) {
         try {
             const projectOid = req.params.id;
-            const customerId = req.params.customerId;
-            const project = await Project.findOne({
-                $and: [
-                    {
-                        _id: projectOid
-                    },
-                    {
-                        customer_id: customerId
-                    }
-                ]
-            }).select('phases.modules.tasks.taskId');
+            const project = await Project.findOne(
+                {
+                    _id: projectOid
+                }
+            ).select('phases.modules.tasks.taskId');
             if (!project) {
                 return next(CustomErrorHandler.notFound('Project not found'));
             }
@@ -463,7 +445,7 @@ const projectController = {
             if (!member) {
                 return next(CustomErrorHandler.notFound("Member not found"));
             }
-            return res.status(200).json({"Remaining Projects":member.projects});
+            return res.status(200).json({ "Remaining Projects": member.projects });
         } catch (error) {
             return next(error);
         }
