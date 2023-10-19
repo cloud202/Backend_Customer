@@ -250,7 +250,7 @@ const templateSchema = new Schema({
 templateSchema.pre('findOneAndUpdate', async function (next) {
     try {
         const docToUpdate = await this.model.findOne(this.getQuery());
-
+        let update = this._update;
         const ids = this.options.ids ? this.options.ids : {};
         let result = null;
         if (Object.keys(ids).length === 1) {
@@ -266,7 +266,7 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
         } else if (Object.keys(ids).length === 3) {
             docToUpdate.phases.forEach(phase =>
                 phase.modules.forEach(module => {
-                    module.tasks.forEach(task => {                                 
+                    module.tasks.forEach(task => {
                         if (task._id == ids.taskOid) {
                             result = task;
                         }
