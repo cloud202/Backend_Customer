@@ -83,6 +83,21 @@ const registrationController = {
         } catch (error) {
             return next(error);
         }
+    },
+
+    async getMemberById(req,res,next){
+        try {
+            const customerId = req.params.id;
+            const members = await CustomerRegistration.find({ customer_id: customerId, isMember: true });
+    
+            if (!members || members.length === 0) {
+                return next(CustomErrorHandler.notFound('No members found for this customer'));
+            }
+    
+            return res.status(200).json(members);
+        } catch (error) {
+            return next(error);
+        }
     }
 }
 

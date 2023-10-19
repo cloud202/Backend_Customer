@@ -10,6 +10,8 @@ router.patch('/api/customer/registration/:id', registrationController.updateCust
 router.delete('/api/customer/registration/:id', registrationController.deleteCustomer);
 router.get('/api/customer/registration/email/:email', registrationController.getCustomerByEmail);
 
+router.get('/api/customer/member/:id', registrationController.getMemberById);
+
 //custumer routes for project 
 router.post('/api/customer/:customerId/project/add/:templateId', projectController.addProject);
 router.get('/api/customer/project/:id/phases', projectController.getProjectPhases);
