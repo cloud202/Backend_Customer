@@ -174,20 +174,12 @@ const projectController = {
             if (error) {
                 return next(error);
             }
-            const customerId = req.body.customerId;
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
             const ids = { phaseOid };
             const updatedPhase = await Project.findOneAndUpdate(
                 {
-                    $and: [
-                        {
-                            customer_id: customerId,
-                        },
-                        {
-                            _id: projectOid
-                        }
-                    ]
+                    _id: projectOid
                 },
                 {
                     "$set": {
@@ -227,21 +219,13 @@ const projectController = {
             if (error) {
                 return next(error);
             }
-            const customerId = req.body.customerId;
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
             const ids = { phaseOid, moduleOid };
             const updatedModule = await Project.findOneAndUpdate(
                 {
-                    $and: [
-                        {
-                            customer_id: customerId,
-                        },
-                        {
-                            _id: projectOid
-                        }
-                    ]
+                    _id: projectOid
                 },
                 {
                     "$set": {
