@@ -284,7 +284,6 @@ const projectController = {
                 return next(error);
             }
             const updateFields = req.body.updateFields;
-            const customerId = req.body.customerId;
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
@@ -292,14 +291,7 @@ const projectController = {
             const ids = { phaseOid, moduleOid, taskOid };
             const updatedTask = await Project.findOneAndUpdate(
                 {
-                    $and: [
-                        {
-                            customer_id: customerId,
-                        },
-                        {
-                            _id: projectOid
-                        }
-                    ]
+                    _id: projectOid
                 },
                 {
                     "$set": {
