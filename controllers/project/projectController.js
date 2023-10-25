@@ -176,7 +176,7 @@ const projectController = {
             }
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
-            const ids = { phaseOid };
+            const ids = { phaseOid, updateFields };
             const updatedPhase = await Project.findOneAndUpdate(
                 {
                     _id: projectOid
@@ -222,7 +222,7 @@ const projectController = {
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
-            const ids = { phaseOid, moduleOid };
+            const ids = { phaseOid, moduleOid, updateFields };
             const updatedModule = await Project.findOneAndUpdate(
                 {
                     _id: projectOid
@@ -272,7 +272,7 @@ const projectController = {
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
             const taskOid = req.body.taskOid;
-            const ids = { phaseOid, moduleOid, taskOid };
+            const ids = { phaseOid, moduleOid, taskOid, updateFields };
             const updatedTask = await Project.findOneAndUpdate(
                 {
                     _id: projectOid
@@ -323,7 +323,7 @@ const projectController = {
                 return next(error);
             }
             const projectOid = req.params.id;
-            const updatedProject = await Project.findOneAndUpdate({ _id: projectOid }, { ...req.body }, { new: true });
+            const updatedProject = await Project.findOneAndUpdate({ _id: projectOid }, { ...req.body, $inc: { version: 1 } }, { new: true });
             if (!updatedProject) {
                 return next(CustomErrorHandler.notFound('Project not found'));
             }
@@ -349,7 +349,7 @@ const projectController = {
     async getProjectHistory(req, res, next) {
         try {
             const projectOid = req.params.id;
-            const projectHistory = await History.find({ project_id: projectOid }).sort({ version: 1 });
+            const projectHistory = await History.find({ project_id: projectOid }).sort({ version: 1 }).populate('updated_by');
             if (projectHistory.length === 0) {
                 return next(CustomErrorHandler.notFound("Project Not Updated"));
             }

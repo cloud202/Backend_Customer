@@ -250,38 +250,50 @@ const templateSchema = new Schema({
 templateSchema.pre('findOneAndUpdate', async function (next) {
     try {
         const docToUpdate = await this.model.findOne(this.getQuery());
-        let update = this._update;
         const ids = this.options.ids ? this.options.ids : {};
-        let result = null;
-        if (Object.keys(ids).length === 1) {
-            result = docToUpdate.phases.find(phase => phase._id == ids.phaseOid);
-        } else if (Object.keys(ids).length === 2) {
+        let result = {}
+        if (Object.keys(ids).length === 2) {
+            docToUpdate.phases.forEach(phase => {
+                if (phase._id == ids.phaseOid) {
+                    result.old = phase.phasesId
+                    result.new = ids.updateFields;
+                }
+            })
+        } else if (Object.keys(ids).length === 3) {
             docToUpdate.phases.forEach(phase =>
                 phase.modules.forEach(module => {
                     if (module._id == ids.moduleOid) {
-                        result = module;
+                        result.old = module.moduleId;
+                        result.new = ids.updateFields;
                     }
                 })
             )
-        } else if (Object.keys(ids).length === 3) {
+        } else if (Object.keys(ids).length === 4) {
             docToUpdate.phases.forEach(phase =>
                 phase.modules.forEach(module => {
                     module.tasks.forEach(task => {
                         if (task._id == ids.taskOid) {
-                            result = task;
+                            result.old = task.taskId;
+                            result.new = ids.updateFields;
                         }
                     })
                 })
             )
         } else {
-            result = {
+            result.old = {
                 project_name: docToUpdate.project_name,
                 start_date: docToUpdate.start_date,
                 end_date: docToUpdate.end_date,
                 details: docToUpdate.details,
             };
+            result.new = {
+                project_name: this._update.project_name,
+                start_date: this._update.start_date,
+                end_date: this._update.end_date,
+                details: this._update.details,
+            };
         }
-        if (result) {
+        if (Object.keys(result).length !== 0) {
             const historyEntry = {
                 version: docToUpdate.version,
                 project_id: docToUpdate._id,
