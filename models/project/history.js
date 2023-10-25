@@ -12,10 +12,16 @@ const historySchema = new Schema({
     },
     updated_by: {
         type: Schema.Types.ObjectId,
+        ref: "CustomerRegistration",
         required: true
     },
     data: {
-        type: Schema.Types.Mixed
+        old: {
+            type: Schema.Types.Mixed
+        },
+        new: {
+            type: Schema.Types.Mixed
+        },
     },
 }, { timestamps: true });
 
