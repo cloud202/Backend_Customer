@@ -15,6 +15,10 @@ const historySchema = new Schema({
         ref: "CustomerRegistration",
         required: true
     },
+    updated_field: {
+        type: String,
+        required: true
+    },
     data: {
         old: {
             type: Schema.Types.Mixed
