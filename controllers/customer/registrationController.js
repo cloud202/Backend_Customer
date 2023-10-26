@@ -24,7 +24,31 @@ const registrationController = {
     },
     async getAllCustomers(req, res, next) {
         try {
-            const allCustomers = await CustomerRegistration.find();
+            // const allCustomers = await CustomerRegistration.find();
+            const allCustomers = await CustomerRegistration.aggregate([
+                {
+                    $match: { isMember: false }
+                },
+                {
+                    $lookup: {
+                        from: 'customers',
+                        localField: 'customer_id',
+                        foreignField: 'customer_id',
+                        as: 'members'
+                    }
+                },
+                {
+                    $addFields: {
+                        members: {
+                            $filter: {
+                                input: '$members',
+                                as: 'member',
+                                cond: { $eq: ['$$member.isMember', true] } // Filter for members only
+                            }
+                        }
+                    }
+                }
+            ]);
             return res.status(200).json(allCustomers);
         } catch (error) {
             return next(error);
@@ -85,15 +109,15 @@ const registrationController = {
         }
     },
 
-    async getMemberById(req,res,next){
+    async getMemberById(req, res, next) {
         try {
             const customerId = req.params.id;
             const members = await CustomerRegistration.find({ customer_id: customerId, isMember: true });
-    
+
             if (!members || members.length === 0) {
                 return next(CustomErrorHandler.notFound('No members found for this customer'));
             }
-    
+
             return res.status(200).json(members);
         } catch (error) {
             return next(error);

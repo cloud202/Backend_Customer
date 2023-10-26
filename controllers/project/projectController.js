@@ -136,6 +136,7 @@ const projectController = {
 
     async getCustomerProjectById(req, res, next) {
         try {
+            let preHookFlag = false;
             const projectOid = req.params.id;
             const project = await Project.findOneAndUpdate(
                 {
@@ -155,7 +156,8 @@ const projectController = {
                             ]
                         }
                     ],
-                    new: true
+                    new: true,
+                    preHookFlag
                 }
             )
             if (!project) {
