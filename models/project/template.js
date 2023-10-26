@@ -249,13 +249,17 @@ const templateSchema = new Schema({
 
 templateSchema.pre('findOneAndUpdate', async function (next) {
     try {
-        if (this._update) {
+        let isNeeded = true;
+        if (this.options.preHookFlag==false) {
+            isNeeded = this.options.preHookFlag;
+        }
+        if (isNeeded) {
             const docToUpdate = await this.model.findOne(this.getQuery());
-            let updated_field="PROJECT";
+            let updated_field = "PROJECT";
             const ids = this.options.ids ? this.options.ids : {};
             let result = {}
             if (Object.keys(ids).length === 2) {
-                updated_field="PHASE";
+                updated_field = "PHASE";
                 docToUpdate.phases.forEach(phase => {
                     if (phase._id == ids.phaseOid) {
                         result.old = phase.phasesId
@@ -263,7 +267,7 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
                     }
                 })
             } else if (Object.keys(ids).length === 3) {
-                updated_field="MODULE";
+                updated_field = "MODULE";
                 docToUpdate.phases.forEach(phase =>
                     phase.modules.forEach(module => {
                         if (module._id == ids.moduleOid) {
@@ -273,7 +277,7 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
                     })
                 )
             } else if (Object.keys(ids).length === 4) {
-                updated_field="TASK";
+                updated_field = "TASK";
                 docToUpdate.phases.forEach(phase =>
                     phase.modules.forEach(module => {
                         module.tasks.forEach(task => {
