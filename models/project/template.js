@@ -249,6 +249,9 @@ const templateSchema = new Schema({
 
 templateSchema.pre('findOneAndUpdate', async function (next) {
     try {
+        if (this._update.$setOnInsert) {
+            return next();
+        }
         const docToUpdate = await this.model.findOne(this.getQuery());
         const ids = this.options.ids ? this.options.ids : {};
         let result = {}
