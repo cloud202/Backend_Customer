@@ -294,7 +294,12 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
                     end_date: docToUpdate.end_date,
                     details: docToUpdate.details,
                 };
-                const {customerId,...newVals} = this._update;
+                const newVals = {
+                    project_name: this._update.project_name,
+                    start_date: this._update.start_date,
+                    end_date: this._update.end_date,
+                    details: this._update.details,
+                };
                 data = filterDifferances(old, newVals)
             }
             if (Object.keys(data).length !== 0) {
