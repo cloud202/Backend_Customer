@@ -19,14 +19,7 @@ const historySchema = new Schema({
         type: String,
         required: true
     },
-    data: {
-        old: {
-            type: Schema.Types.Mixed
-        },
-        new: {
-            type: Schema.Types.Mixed
-        },
-    },
+    data: Schema.Types.Mixed
 }, { timestamps: true });
 
 module.exports = mongoose.model('History', historySchema, 'project_history');

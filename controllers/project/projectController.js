@@ -171,6 +171,7 @@ const projectController = {
 
     async updatePhaseById(req, res, next) {
         try {
+            const customerId = req.body.customerId;
             const updateFields = req.body.updateFields;
             const { error } = phaseSchema.validate(req.body);
             if (error) {
@@ -202,7 +203,8 @@ const projectController = {
                         }
                     ],
                     new: true,
-                    ids
+                    ids,
+                    customerId
                 }
             );
             if (!updatedPhase) {
@@ -216,6 +218,7 @@ const projectController = {
 
     async updateModuleById(req, res, next) {
         try {
+            const customerId = req.body.customerId;
             const updateFields = req.body.updateFields;
             const { error } = moduleSchema.validate(req.body);
             if (error) {
@@ -251,7 +254,8 @@ const projectController = {
                         }
                     ],
                     new: true,
-                    ids
+                    ids,
+                    customerId
                 },
             );
             if (!updatedModule) {
@@ -270,6 +274,7 @@ const projectController = {
                 return next(error);
             }
             const updateFields = req.body.updateFields;
+            const customerId = req.body.customerId;
             const projectOid = req.body.projectOid;
             const phaseOid = req.body.phaseOid;
             const moduleOid = req.body.moduleOid;
@@ -307,6 +312,7 @@ const projectController = {
                     ],
                     new: true,
                     ids,
+                    customerId
                 }
             );
             if (!updatedTask) {
@@ -324,6 +330,7 @@ const projectController = {
             if (error) {
                 return next(error);
             }
+            const customerId = req.body.customerId;
             const projectOid = req.params.id;
             const updatedProject = await Project.findOneAndUpdate({ _id: projectOid }, { ...req.body, $inc: { version: 1 } }, { new: true });
             if (!updatedProject) {

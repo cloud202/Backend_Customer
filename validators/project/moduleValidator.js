@@ -11,6 +11,7 @@ const updateFieldsSchema = {
 };
 
 const moduleSchema = Joi.object({
+    customerId: Joi.objectId().required(),
     projectOid: Joi.objectId().required(),
     phaseOid: Joi.objectId().required(),
     moduleOid: Joi.objectId().required(),
