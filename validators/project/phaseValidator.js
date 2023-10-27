@@ -11,6 +11,7 @@ const updateFieldsSchema = {
 };
 
 const phaseSchema = Joi.object({
+    customerId: Joi.objectId().required(),
     projectOid: Joi.objectId().required(),
     phaseOid: Joi.objectId().required(),
     updateFields: Joi.object(updateFieldsSchema).required(),

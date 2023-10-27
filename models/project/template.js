@@ -250,20 +250,20 @@ const templateSchema = new Schema({
 templateSchema.pre('findOneAndUpdate', async function (next) {
     try {
         let isNeeded = true;
-        if (this.options.preHookFlag==false) {
-            isNeeded = this.options.preHookFlag;
+        if (this.options.preHookFlag == false) {
+            isNeeded = false;
         }
         if (isNeeded) {
             const docToUpdate = await this.model.findOne(this.getQuery());
             let updated_field = "PROJECT";
+            let updated_by = this.options.customerId;
             const ids = this.options.ids ? this.options.ids : {};
-            let result = {}
+            let data = {}
             if (Object.keys(ids).length === 2) {
                 updated_field = "PHASE";
                 docToUpdate.phases.forEach(phase => {
                     if (phase._id == ids.phaseOid) {
-                        result.old = phase.phasesId
-                        result.new = ids.updateFields;
+                        data = filterDifferances(phase.phasesId, ids.updateFields)
                     }
                 })
             } else if (Object.keys(ids).length === 3) {
@@ -271,8 +271,7 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
                 docToUpdate.phases.forEach(phase =>
                     phase.modules.forEach(module => {
                         if (module._id == ids.moduleOid) {
-                            result.old = module.moduleId;
-                            result.new = ids.updateFields;
+                            data = filterDifferances(module.moduleId, ids.updateFields)
                         }
                     })
                 )
@@ -282,33 +281,29 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
                     phase.modules.forEach(module => {
                         module.tasks.forEach(task => {
                             if (task._id == ids.taskOid) {
-                                result.old = task.taskId;
-                                result.new = ids.updateFields;
+                                data = filterDifferances(task.taskId, ids.updateFields)
                             }
                         })
                     })
                 )
             } else {
-                result.old = {
+                updated_by = this._update.customerId;
+                const old = {
                     project_name: docToUpdate.project_name,
                     start_date: docToUpdate.start_date,
                     end_date: docToUpdate.end_date,
                     details: docToUpdate.details,
                 };
-                result.new = {
-                    project_name: this._update.project_name,
-                    start_date: this._update.start_date,
-                    end_date: this._update.end_date,
-                    details: this._update.details,
-                };
+                const {customerId,...newVals} = this._update;
+                data = filterDifferances(old, newVals)
             }
-            if (Object.keys(result).length !== 0) {
+            if (Object.keys(data).length !== 0) {
                 const historyEntry = {
                     version: docToUpdate.version,
                     project_id: docToUpdate._id,
-                    updated_by: docToUpdate.customer_id,
+                    updated_by,
                     updated_field,
-                    data: result
+                    data
                 }
                 await History.create(historyEntry);
             }
@@ -321,3 +316,9 @@ templateSchema.pre('findOneAndUpdate', async function (next) {
 
 module.exports = mongoose.model('Project', templateSchema, 'customer_projects');
 
+function filterDifferances(oldDocument, newDocument) {
+    const updatedKeyValues = Object.fromEntries(
+        Object.entries(newDocument).filter(([key, value]) => oldDocument[key] !== value)
+    );
+    return updatedKeyValues;
+}

@@ -13,6 +13,7 @@ const updateFieldsSchema = {
 };
 
 const taskSchema = Joi.object({
+    customerId: Joi.objectId().required(),
     projectOid: Joi.objectId().required(),
     phaseOid: Joi.objectId().required(),
     moduleOid: Joi.objectId().required(),
